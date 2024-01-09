@@ -30,9 +30,23 @@ input {
   align-items: center;
 }
 
+.flex-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 #app {
   margin-top: 1rem;
   width: 100vw;
+}
+
+#root{
+  padding: 0 10px;
+}
+
+#board {
+  margin-top: 5rem;
 }
 
 .my-button {
@@ -56,4 +70,14 @@ input {
 .my-button:hover {
   box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
   transform: translateY(-2px);
+}
+
+.hidden {
+  display: none;
+}
+
+.field {
+  border: 1px solid black;
+  width: 10%;
+  height: 2rem;
 }
