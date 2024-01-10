@@ -4,20 +4,91 @@ import Board from "./components/Board";
 function App() {
   const [boardSize, setBoardSize] = useState(5);
   const [started, setStarted] = useState(false);
-  const [emptyBoard, setEmptyBoard] = useState([])
+  const [emptyBoard, setEmptyBoard] = useState([]);
+
+  //LOGS
+  console.log(emptyBoard);
+
+  //FUNCTIONS
 
   function startClicked() {
     setStarted(true);
-    setBoardSize()
-
-    const newBoard = []
-    for (let i = 0; i < boardSize; i++) {
-      newBoard.push(i)
-    }
-    setEmptyBoard(newBoard)
+    createBoard();
   }
 
-  console.log(emptyBoard);
+  function boardSizeInputCheck(size){
+    if (size < 5) {
+      setBoardSize(5)
+    }
+    else if (size > 100) {
+      setBoardSize(100)
+    }
+    else {
+      setBoardSize(size)
+    }
+  }
+
+  function createBoard(){
+    const newBoard = []
+    for (let i = 0; i < boardSize; i++) {
+      newBoard.push({
+        id:i,
+        owner: ""
+      })
+    }
+    initialRandomSetup(newBoard)
+  }
+
+  function initialRandomSetup(newBoard){
+
+    const p1Fields = []
+    const p2Fields = []
+
+    const iterationNumber = Math.floor(newBoard.length * 0.2)
+
+    for (let i = 0; i < iterationNumber; i++) {
+      let p1Field = Math.floor(Math.random() * newBoard.length)
+      while (p1Fields.includes(p1Field)) {
+        p1Field = Math.floor(Math.random() * newBoard.length)
+      }
+      p1Fields.push(p1Field)
+    }
+
+    for (let i = 0; i < iterationNumber; i++) {
+      let p2Field = Math.floor(Math.random() * newBoard.length)
+      while (p1Fields.includes(p2Field) || p2Fields.includes(p2Field)) {
+        p2Field = Math.floor(Math.random() * newBoard.length)
+      }
+      p2Fields.push(p2Field)
+    }
+
+    let startingBoard = []
+
+    for (let i = 0; i < newBoard.length; i++) {
+      if (p1Fields.includes(i)) {
+        const element = {
+          id: i,
+          owner: "p1"
+        }
+        startingBoard.push(element)
+      } else if (p2Fields.includes(i)) {
+        const element = {
+          id: i,
+          owner: "p2"
+        }
+        startingBoard.push(element)
+      } else {
+        const element = {
+          id: i,
+          owner: ""
+        }
+        startingBoard.push(element)
+      }
+    }
+
+    setEmptyBoard(startingBoard)
+  }
+
 
   return (
     <>
@@ -31,7 +102,7 @@ function App() {
             min="5"
             max="100"
             placeholder={boardSize}
-            onChange={(e)=>{setBoardSize(e.target.value)}}
+            onChange={(e)=>{boardSizeInputCheck(e.target.value)}}
           />
         </div>
         <button className="my-button" onClick={startClicked}>
