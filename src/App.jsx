@@ -5,9 +5,10 @@ function App() {
   const [boardSize, setBoardSize] = useState(5);
   const [started, setStarted] = useState(false);
   const [emptyBoard, setEmptyBoard] = useState([]);
+  const [nextPlayer, setNextPlayer] = useState("")
 
   //LOGS
-  console.log(emptyBoard);
+  console.log(nextPlayer);
 
   //FUNCTIONS
 
@@ -87,6 +88,15 @@ function App() {
     }
 
     setEmptyBoard(startingBoard)
+    setNextPlayer(randomPlayer())
+  }
+
+  function randomPlayer(){
+    const players = ["Player 1", "Player 2"]
+    const randomNumber = Math.floor(Math.random()*players.length)
+    const randomPlayer = players[randomNumber]
+
+    return randomPlayer
   }
 
 
@@ -109,7 +119,7 @@ function App() {
           {started? "Restart" : "Start"}
         </button>
       </div>
-      <Board started={started} emptyBoard={emptyBoard}/>
+      <Board started={started} emptyBoard={emptyBoard} nextPlayer={nextPlayer}/>
     </>
   );
 }
