@@ -101,3 +101,8 @@ input {
 .next-player {
   margin-top: 2rem;
 }
+
+.fade-in-text {
+  font-family: Arial;
+  animation: fadeIn 5s;
+}

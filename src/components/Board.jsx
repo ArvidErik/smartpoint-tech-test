@@ -1,9 +1,17 @@
 import React from "react";
 
-function Board({ started, emptyBoard, nextPlayer, setEmptyBoard }) {
+function Board({
+  started,
+  emptyBoard,
+  nextPlayer,
+  setEmptyBoard,
+  setNextPlayer,
+  winning,
+  setWinning,
+}) {
   //FUNCTIONS
   function fieldClick(field) {
-    if (!ownFieldCheck(field)) {
+    if (!ownFieldCheck(field) && !winning) {
       const firstMove = stealField(field);
       let updatedBoard;
 
@@ -11,13 +19,15 @@ function Board({ started, emptyBoard, nextPlayer, setEmptyBoard }) {
         updatedBoard = checkBelow(field, firstMove);
       }
       if (field.id < emptyBoard.length - 1) {
-        updatedBoard = checkAbove(field, updatedBoard?updatedBoard:firstMove);
+        updatedBoard = checkAbove(
+          field,
+          updatedBoard ? updatedBoard : firstMove
+        );
       }
 
       console.log("FINAL BOARD", updatedBoard);
       setEmptyBoard(updatedBoard);
-      // winCheck()
-      // switchPlayer()
+      winCheck(updatedBoard);
     }
   }
 
@@ -114,11 +124,11 @@ function Board({ started, emptyBoard, nextPlayer, setEmptyBoard }) {
     let newArr = [field];
     console.log("NextPlayer is", nextPlayer);
     console.log("BOARD IS", board);
-    
+
     while (
       newArr.filter((e) => e.owner == nextPlayer).length < 1 &&
       i <= board.length - 1
-      ) {
+    ) {
       console.log("NEW ARRAY IS", newArr);
       newArr.push(board[i]);
       i++;
@@ -171,6 +181,33 @@ function Board({ started, emptyBoard, nextPlayer, setEmptyBoard }) {
     }
   }
 
+  function winCheck(board) {
+    let p1Counter = 0;
+    let p2Counter = 0;
+
+    console.log(board);
+
+    board.forEach((e) => {
+      if (e.owner == "p1") {
+        p1Counter++;
+      } else if (e.owner == "p2") {
+        p2Counter++;
+      }
+    });
+
+    if (p1Counter > 0 && p2Counter == 0) {
+      setWinning(true);
+    } else if (p2Counter > 0 && p1Counter == 0) {
+      setWinning(true);
+    } else {
+      if (nextPlayer == "p1") {
+        return setNextPlayer("p2");
+      } else {
+        return setNextPlayer("p1");
+      }
+    }
+  }
+
   return (
     <div className="flex">
       <div id="board" className={`flex-row ${!started && "hidden"}`}>
@@ -189,12 +226,26 @@ function Board({ started, emptyBoard, nextPlayer, setEmptyBoard }) {
           );
         })}
       </div>
-      <h2 className={`next-player ${!started && "hidden"}`}>
+      <h2
+        className={`next-player ${!started && "hidden"} ${winning && "hidden"}`}
+      >
         <span className={`${nextPlayer == "p1" ? "player1" : "player2"}`}>
           {nextPlayer == "p1" ? "Player 1" : "Player 2"}
         </span>
         , it is your turn
       </h2>
+      <h1
+        className={`next-player fade-in-text ${!started && "hidden"} ${
+          !winning && "hidden"
+        }`}
+      >
+        <span className={`${nextPlayer == "p1" ? "player1" : "player2"}`}>
+        {nextPlayer == "p1"
+          ? "Player 1 "
+          : "Player 2 "}
+        </span>
+        is the winner
+      </h1>
     </div>
   );
 }

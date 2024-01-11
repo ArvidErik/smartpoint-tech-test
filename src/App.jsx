@@ -6,6 +6,7 @@ function App() {
   const [started, setStarted] = useState(false);
   const [emptyBoard, setEmptyBoard] = useState([]);
   const [nextPlayer, setNextPlayer] = useState("");
+  const [winning, setWinning] = useState(false);
 
   //LOGS
   console.log(nextPlayer);
@@ -15,6 +16,7 @@ function App() {
   function startClicked() {
     setStarted(true);
     createBoard();
+    setWinning(false)
   }
 
   function boardSizeInputCheck(size) {
@@ -101,7 +103,7 @@ function App() {
       <div id="app" className="flex">
         <h1>Simple Board Game</h1>
         <div className={`flex ${started && "hidden"}`}>
-          <h2>Please select a board size!</h2>
+          <h2>Please select a board size between 5 and 100!</h2>
           <input
             id="size-input"
             type="number"
@@ -122,6 +124,9 @@ function App() {
         emptyBoard={emptyBoard}
         nextPlayer={nextPlayer}
         setEmptyBoard={setEmptyBoard}
+        setNextPlayer={setNextPlayer}
+        setWinning={setWinning}
+        winning={winning}
       />
     </>
   );
