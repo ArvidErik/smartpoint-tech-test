@@ -19,13 +19,14 @@ function Board({
 
       //CHECKING BELOW FIELDS
       if (field.id > 0) {
-        updatedBoard = checkBelow(field, firstMove);
+        updatedBoard = checkSide(field, firstMove, "below");
       }
       //CHECKING ABOVE FIELDS
       if (field.id < gameBoard.length - 1) {
-        updatedBoard = checkAbove(
+        updatedBoard = checkSide(
           field,
-          updatedBoard ? updatedBoard : firstMove
+          updatedBoard ? updatedBoard : firstMove,
+          "above"
         );
       }
       setGameBoard(updatedBoard);
@@ -58,80 +59,33 @@ function Board({
     return newBoard;
   }
 
-  function checkBelow(field, arr) {
+  function checkSide(field, arr, dir) {
     let board = arr;
-    //IF DIR below
-    let i = field.id - 1;
+    let i;
+    if (dir == "below") {
+      i = field.id - 1;
+    } else {
+      i = field.id + 1;
+    }
     let newArr = [field];
 
     //SCANNING THE LEFT SIDE WHILE OWN FIELD IS FOUND
-    while (
-      newArr.filter((e) => e.owner == currentPlayer).length < 1 &&
-      i >= 0
-    ) {
-      newArr.push(board[i]);
-      i--;
-    }
-
-    let countEmpty = 0;
-    let countEnemy = 0;
-    let countOwn = 0;
-
-    let waitingplayer;
-    if (currentPlayer == "p1") {
-      waitingplayer = "p2";
+    if (dir == "below") {
+      while (
+        newArr.filter((e) => e.owner == currentPlayer).length < 1 &&
+        i >= 0
+      ) {
+        newArr.push(board[i]);
+        i--;
+      }
     } else {
-      waitingplayer = "p1";
-    }
-
-    //COUNTING THE TYPE OF OWNER OF THE FIELDS
-    for (let j = 1; j < newArr.length; j++) {
-      if (newArr[j].owner == "") {
-        countEmpty++;
+      while (
+        newArr.filter((e) => e.owner == currentPlayer).length < 1 &&
+        i <= board.length - 1
+      ) {
+        newArr.push(board[i]);
+        i++;
       }
-      if (newArr[j].owner == waitingplayer) {
-        countEnemy++;
-      }
-      if (newArr[j].owner == currentPlayer) {
-        countOwn++;
-      }
-    }
-
-    //IF THERE IS ONLY ONE TYPE OF OWNER UNTIL THE OWN FILED, IT RECOLORS THE FILEDS OTHERWISE RETURNS THE PRELIMINARY ARRAY
-    if (
-      countOwn > 0 &&
-      ((countEmpty > 0 && countEnemy < 1) || (countEmpty < 1 && countEnemy > 0))
-    ) {
-      let newBoard = [...board];
-
-      for (let index = 0; index < newArr.length; index++) {
-        let newObj = {
-          id: newArr[index].id,
-          owner: currentPlayer,
-        };
-
-        newBoard.splice(newArr[index].id, 1, newObj);
-      }
-
-      return newBoard;
-    } else {
-      return board;
-    }
-  }
-
-  function checkAbove(field, arr) {
-    const board = arr;
-    //if dir above
-    let i = field.id + 1;
-    let newArr = [field];
-
-    //SCANNING THE RIGHT SIDE WHILE OWN FIELD IS FOUND
-    while (
-      newArr.filter((e) => e.owner == currentPlayer).length < 1 &&
-      i <= board.length - 1
-    ) {
-      newArr.push(board[i]);
-      i++;
     }
 
     let countEmpty = 0;
