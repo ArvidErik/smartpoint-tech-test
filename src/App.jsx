@@ -3,17 +3,14 @@ import Board from "./components/Board";
 
 function App() {
   const [boardSize, setBoardSize] = useState(5);
+  const [gameBoard, setGameBoard] = useState([]);
+  const [currentPlayer, setcurrentPlayer] = useState("");
   const [started, setStarted] = useState(false);
-  const [emptyBoard, setEmptyBoard] = useState([]);
-  const [nextPlayer, setNextPlayer] = useState("");
-  const [winning, setWinning] = useState(false);
-
-  //LOGS
-  console.log(nextPlayer);
+  const [winning, setWinning] = useState(false); 
 
   //FUNCTIONS
-
   function startClicked() {
+    //WHEN THE START BUTTON IS CLICKED
     setStarted(true);
     createBoard();
     setWinning(false)
@@ -30,6 +27,7 @@ function App() {
   }
 
   function createBoard() {
+    //CREATES AN EMPTY BOARD WITH THE SIZE
     const newBoard = [];
     for (let i = 0; i < boardSize; i++) {
       newBoard.push({
@@ -39,13 +37,14 @@ function App() {
     }
     initialRandomSetup(newBoard);
   }
-  //HAS TO BE REFACTORED
+
   function initialRandomSetup(newBoard) {
     const p1Fields = [];
     const p2Fields = [];
 
     const iterationNumber = Math.floor(newBoard.length * 0.2);
 
+    //GET RANDOM INDEXES IN 20%
     for (let i = 0; i < iterationNumber; i++) {
       let p1Field = Math.floor(Math.random() * newBoard.length);
       while (p1Fields.includes(p1Field)) {
@@ -64,6 +63,7 @@ function App() {
 
     let startingBoard = [];
 
+    //CREATE THE FIELD OBJECTS 
     for (let i = 0; i < newBoard.length; i++) {
       if (p1Fields.includes(i)) {
         const element = {
@@ -86,11 +86,12 @@ function App() {
       }
     }
 
-    setEmptyBoard(startingBoard);
-    setNextPlayer(randomPlayer());
+    setGameBoard(startingBoard);
+    setcurrentPlayer(randomPlayer());
   }
 
   function randomPlayer() {
+    //SELECT A RANDOM PLAYER
     const players = ["p1", "p2"];
     const randomNumber = Math.floor(Math.random() * players.length);
     const randomPlayer = players[randomNumber];
@@ -121,10 +122,10 @@ function App() {
       </div>
       <Board
         started={started}
-        emptyBoard={emptyBoard}
-        nextPlayer={nextPlayer}
-        setEmptyBoard={setEmptyBoard}
-        setNextPlayer={setNextPlayer}
+        gameBoard={gameBoard}
+        currentPlayer={currentPlayer}
+        setGameBoard={setGameBoard}
+        setcurrentPlayer={setcurrentPlayer}
         setWinning={setWinning}
         winning={winning}
       />

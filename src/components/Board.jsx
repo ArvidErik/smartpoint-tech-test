@@ -2,37 +2,39 @@ import React from "react";
 
 function Board({
   started,
-  emptyBoard,
-  nextPlayer,
-  setEmptyBoard,
-  setNextPlayer,
+  gameBoard,
+  currentPlayer,
+  setGameBoard,
+  setcurrentPlayer,
   winning,
   setWinning,
 }) {
   //FUNCTIONS
   function fieldClick(field) {
+    //HANDLES THE FIELD CLICK EVENT
     if (!ownFieldCheck(field) && !winning) {
+      //IF THE FIELD IS NOT OWN, STEALS IT
       const firstMove = stealField(field);
       let updatedBoard;
 
+      //CHECKING BELOW FIELDS
       if (field.id > 0) {
         updatedBoard = checkBelow(field, firstMove);
       }
-      if (field.id < emptyBoard.length - 1) {
+      //CHECKING ABOVE FIELDS
+      if (field.id < gameBoard.length - 1) {
         updatedBoard = checkAbove(
           field,
           updatedBoard ? updatedBoard : firstMove
         );
       }
-
-      console.log("FINAL BOARD", updatedBoard);
-      setEmptyBoard(updatedBoard);
+      setGameBoard(updatedBoard);
       winCheck(updatedBoard);
     }
   }
 
   function ownFieldCheck(field) {
-    if (field.owner == nextPlayer) {
+    if (field.owner == currentPlayer) {
       return true;
     } else {
       return false;
@@ -42,10 +44,10 @@ function Board({
   function stealField(targetField) {
     const updatedField = {
       id: targetField.id,
-      owner: nextPlayer,
+      owner: currentPlayer,
     };
 
-    const newBoard = [...emptyBoard].map((element, i) => {
+    const newBoard = [...gameBoard].map((element, i) => {
       if (i == targetField.id) {
         return updatedField;
       } else {
@@ -57,31 +59,32 @@ function Board({
   }
 
   function checkBelow(field, arr) {
-    console.log("Checking Below");
-
     let board = arr;
     let i = field.id - 1;
     let newArr = [];
     newArr.push(field);
-    console.log("NextPlayer is", nextPlayer);
 
-    while (newArr.filter((e) => e.owner == nextPlayer).length < 1 && i >= 0) {
+    //SCANNING THE LEFT SIDE WHILE OWN FIELD IS FOUND
+    while (
+      newArr.filter((e) => e.owner == currentPlayer).length < 1 &&
+      i >= 0
+    ) {
       newArr.push(board[i]);
       i--;
     }
-    console.log("BELOW ARR", newArr);
 
     let countEmpty = 0;
     let countEnemy = 0;
     let countOwn = 0;
 
     let waitingplayer;
-    if (nextPlayer == "p1") {
+    if (currentPlayer == "p1") {
       waitingplayer = "p2";
     } else {
       waitingplayer = "p1";
     }
 
+    //COUNTING THE TYPE OF OWNER OF THE FIELDS
     for (let j = 1; j < newArr.length; j++) {
       if (newArr[j].owner == "") {
         countEmpty++;
@@ -89,11 +92,12 @@ function Board({
       if (newArr[j].owner == waitingplayer) {
         countEnemy++;
       }
-      if (newArr[j].owner == nextPlayer) {
+      if (newArr[j].owner == currentPlayer) {
         countOwn++;
       }
     }
 
+    //IF THERE IS ONLY ONE TYPE OF OWNER UNTIL THE OWN FILED, IT RECOLORS THE FILEDS OTHERWISE RETURNS THE PRELIMINARY ARRAY
     if (
       countOwn > 0 &&
       ((countEmpty > 0 && countEnemy < 1) || (countEmpty < 1 && countEnemy > 0))
@@ -103,49 +107,44 @@ function Board({
       for (let index = 0; index < newArr.length; index++) {
         let newObj = {
           id: newArr[index].id,
-          owner: nextPlayer,
+          owner: currentPlayer,
         };
 
         newBoard.splice(newArr[index].id, 1, newObj);
       }
 
-      console.log("BELOWBOARD", newBoard);
       return newBoard;
     } else {
-      console.log("BELOWBOARD2", board);
       return board;
     }
   }
 
   function checkAbove(field, arr) {
-    console.log("Checking Above");
     const board = arr;
     let i = field.id + 1;
     let newArr = [field];
-    console.log("NextPlayer is", nextPlayer);
-    console.log("BOARD IS", board);
 
+    //SCANNING THE RIGHT SIDE WHILE OWN FIELD IS FOUND
     while (
-      newArr.filter((e) => e.owner == nextPlayer).length < 1 &&
+      newArr.filter((e) => e.owner == currentPlayer).length < 1 &&
       i <= board.length - 1
     ) {
-      console.log("NEW ARRAY IS", newArr);
       newArr.push(board[i]);
       i++;
     }
-    console.log("ABOVE ARR", newArr);
 
     let countEmpty = 0;
     let countEnemy = 0;
     let countOwn = 0;
 
     let waitingplayer;
-    if (nextPlayer == "p1") {
+    if (currentPlayer == "p1") {
       waitingplayer = "p2";
     } else {
       waitingplayer = "p1";
     }
 
+    //COUNTING THE TYPE OF OWNER OF THE FIELDS
     for (let j = 1; j < newArr.length; j++) {
       if (newArr[j].owner == "") {
         countEmpty++;
@@ -153,11 +152,12 @@ function Board({
       if (newArr[j].owner == waitingplayer) {
         countEnemy++;
       }
-      if (newArr[j].owner == nextPlayer) {
+      if (newArr[j].owner == currentPlayer) {
         countOwn++;
       }
     }
 
+    //IF THERE IS ONLY ONE TYPE OF OWNER UNTIL THE OWN FILED, IT RECOLORS THE FILEDS OTHERWISE RETURNS THE PRELIMINARY ARRAY
     if (
       countOwn > 0 &&
       ((countEmpty > 0 && countEnemy < 1) || (countEmpty < 1 && countEnemy > 0))
@@ -167,25 +167,22 @@ function Board({
       for (let index = 0; index < newArr.length; index++) {
         let newObj = {
           id: newArr[index].id,
-          owner: nextPlayer,
+          owner: currentPlayer,
         };
 
         newBoard.splice(newArr[index].id, 1, newObj);
       }
 
-      console.log("ABOVE BOARD", newBoard);
       return newBoard;
     } else {
-      console.log("ABOVE BOARD2", board);
       return board;
     }
   }
 
   function winCheck(board) {
+    //COUNTS THE TYPE OF OWNER OF THE FIELDS. IF THERE IS ONLY 1, SETS WINNING
     let p1Counter = 0;
     let p2Counter = 0;
-
-    console.log(board);
 
     board.forEach((e) => {
       if (e.owner == "p1") {
@@ -195,15 +192,13 @@ function Board({
       }
     });
 
-    if (p1Counter > 0 && p2Counter == 0) {
-      setWinning(true);
-    } else if (p2Counter > 0 && p1Counter == 0) {
+    if ((p1Counter > 0 && p2Counter == 0) || (p2Counter > 0 && p1Counter == 0)) {
       setWinning(true);
     } else {
-      if (nextPlayer == "p1") {
-        return setNextPlayer("p2");
+      if (currentPlayer == "p1") {
+        return setcurrentPlayer("p2");
       } else {
-        return setNextPlayer("p1");
+        return setcurrentPlayer("p1");
       }
     }
   }
@@ -211,7 +206,7 @@ function Board({
   return (
     <div className="flex">
       <div id="board" className={`flex-row ${!started && "hidden"}`}>
-        {emptyBoard.map((element) => {
+        {gameBoard.map((element) => {
           return (
             <div
               key={element.id}
@@ -229,8 +224,8 @@ function Board({
       <h2
         className={`next-player ${!started && "hidden"} ${winning && "hidden"}`}
       >
-        <span className={`${nextPlayer == "p1" ? "player1" : "player2"}`}>
-          {nextPlayer == "p1" ? "Player 1" : "Player 2"}
+        <span className={`${currentPlayer == "p1" ? "player1" : "player2"}`}>
+          {currentPlayer == "p1" ? "Player 1" : "Player 2"}
         </span>
         , it is your turn
       </h2>
@@ -239,10 +234,8 @@ function Board({
           !winning && "hidden"
         }`}
       >
-        <span className={`${nextPlayer == "p1" ? "player1" : "player2"}`}>
-        {nextPlayer == "p1"
-          ? "Player 1 "
-          : "Player 2 "}
+        <span className={`${currentPlayer == "p1" ? "player1" : "player2"}`}>
+          {currentPlayer == "p1" ? "Player 1 " : "Player 2 "}
         </span>
         is the winner
       </h1>
