@@ -60,9 +60,9 @@ function Board({
 
   function checkBelow(field, arr) {
     let board = arr;
+    //IF DIR below
     let i = field.id - 1;
-    let newArr = [];
-    newArr.push(field);
+    let newArr = [field];
 
     //SCANNING THE LEFT SIDE WHILE OWN FIELD IS FOUND
     while (
@@ -121,6 +121,7 @@ function Board({
 
   function checkAbove(field, arr) {
     const board = arr;
+    //if dir above
     let i = field.id + 1;
     let newArr = [field];
 
@@ -192,7 +193,10 @@ function Board({
       }
     });
 
-    if ((p1Counter > 0 && p2Counter == 0) || (p2Counter > 0 && p1Counter == 0)) {
+    if (
+      (p1Counter > 0 && p2Counter == 0) ||
+      (p2Counter > 0 && p1Counter == 0)
+    ) {
       setWinning(true);
     } else {
       if (currentPlayer == "p1") {

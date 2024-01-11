@@ -1,8 +1,22 @@
-# React + Vite
+# SIMPLE BOARD GAME TECH CHALLENGE
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a simple 2-player browser game developed in a frame of a tech test. Thanks a lot for the opportunity! I Enjoyed it!
 
-Currently, two official plugins are available:
+## Context
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+There is a 1-dimension board with “N” fields, and 2 players: red and blue. Initially the board has
+some red and some blue pieces. The players alternately make moves to color the fields. Who
+can fill the board fully with his color, wins. A player also wins if he can capture all fields of the
+opponent (ie. the opponent doesn’t have any fields of his color on the table).
+
+## State variables
+
+| Name | Definition | Location |
+| ------------- | ------------- | ------------- |
+| boardSize  | Stores the size of the board given by the input  | App.js |
+| gameBoard  | The actual information about the fields  | App.js |
+| currentPlayer  | Informationa about who is the active player  | App.js |
+| started  | Checks is the game is started (styling purposes) | App.js |
+| winning  | Check is the game has ended  | App.js |
+
+
