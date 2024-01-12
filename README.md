@@ -1,6 +1,12 @@
 # SIMPLE BOARD GAME TECH CHALLENGE
 
-This project is a simple 2-player browser game developed in a frame of a tech test. Thanks a lot for the opportunity! I Enjoyed it!
+This project is a simple 2-player browser game developed in a frame of a tech test. Thanks a lot for the opportunity! I enjoyed it!
+
+## Deployment Link
+https://simpleboardgame-sp.netlify.app/
+
+## Info
+After an initial npm install, a simple “npm start” command should start the application.
 
 ## Context
 
@@ -19,4 +25,5 @@ opponent (ie. the opponent doesn’t have any fields of his color on the table).
 | started  | Checks is the game is started (styling purposes) | App.js |
 | winning  | Check is the game has ended  | App.js |
 
-
+## Architecture
+![image of the architecture](/public/boardgame-arch.png)
